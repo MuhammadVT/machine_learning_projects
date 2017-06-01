@@ -105,5 +105,52 @@ fscore = (1 + beta**2) * (precision * recall) / (beta**2 * precision + recall)
 # Decision tree is a good candidate for this problem because 
 
 # 2. 
-
+def train_predict(learner, sample_size, X_train, y_train, X_test, y_test): 
+    '''
+    inputs:
+       - learner: the learning algorithm to be trained and predicted on
+       - sample_size: the size of samples (number) to be drawn from training set
+       - X_train: features training set
+       - y_train: income training set
+       - X_test: features testing set
+       - y_test: income testing set
+    '''
+    
+    results = {}
+    
+    # TODO: Fit the learner to the training data using slicing with 'sample_size'
+    start = time() # Get start time
+    learner = learner.fit(X_train[:sample_size], y_train[:sample_size])
+    end = time() # Get end time
+    
+    # TODO: Calculate the training time
+    results['train_time'] = end - start
+        
+    # TODO: Get the predictions on the test set,
+    #       then get predictions on the first 300 training samples
+    start = time() # Get start time
+    predictions_test = learner.predict(X_test, y_test)
+    predictions_train = learner.predict(X_train[:300], y_train[:300])
+    end = time() # Get end time
+    
+    # TODO: Calculate the total prediction time
+    results['pred_time'] = end-start
+            
+    # TODO: Compute accuracy on the first 300 training samples
+    results['acc_train'] = accuracy_score(predictions_train, y_train[:300])
+        
+    # TODO: Compute accuracy on test set
+    results['acc_test'] = accuracy_score(predictions_test, y_test)
+    
+    # TODO: Compute F-score on the the first 300 training samples
+    results['f_train'] = fbeta_score(prediction_train, y_train[:300]) 
+        
+    # TODO: Compute F-score on the test set
+    results['f_test'] = fbeta_score(prediction_test, y_test])
+       
+    # Success
+    print "{} trained on {} samples.".format(learner.__class__.__name__, sample_size)
+        
+    # Return the results
+    return results
 
