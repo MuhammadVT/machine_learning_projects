@@ -1,3 +1,5 @@
 # machine-learning
-Solution for projects in Udacity's Machine Learning curriculum
+My solutions to the projects in Udacity's Machine Learning curriculum.
+Each project is located in a subfolder under the *projects* folder. 
+
 
