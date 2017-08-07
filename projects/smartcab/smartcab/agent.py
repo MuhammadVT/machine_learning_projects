@@ -19,12 +19,13 @@ class LearningAgent(Agent):
         self.Q = dict()          # Create a Q-table which will be a dictionary of tuples
         self.epsilon = epsilon   # Random exploration factor
         self.alpha = alpha       # Learning factor
-        self.t = 1               # the number of trial agent is in currently
 
         ###########
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        self.t = 1               # the number of trial agent is in currently
+        random.seed(111)
 
 
     def reset(self, destination=None, testing=False):
@@ -47,19 +48,20 @@ class LearningAgent(Agent):
         else:
             if self.learning:
                 # linear decay
-                #self.epsilon = self.epsilon - 0.05
+                #self.epsilon = self.epsilon - 0.01
 
                 # type 1
                 #self.epsilon = 0.85 ** self.t
+                #self.epsilon = 0.97 ** self.t
 
                 # type 2
-                self.epsilon = 1. / (self.t ** 2) 
+                #self.epsilon = 1. / (self.t ** 2) 
 
                 # type 3
-                #self.epsilon = math.exp(-0.15 * self.t)
+                #self.epsilon = math.exp(-0.1 * self.t)
 
                 # type 4 
-                #self.epsilon = math.cos(0.077* self.t)
+                self.epsilon = math.cos(0.01* self.t)
 
                 if self.epsilon < 0:
                     self.epsilon = 0.0
@@ -83,9 +85,10 @@ class LearningAgent(Agent):
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
         #state = None
-        #state = (waypoint, inputs, deadline)
-        state = (waypoint, inputs)
-        #state = (inputs)
+        #state = str((waypoint, inputs, deadline))
+        #state = str((waypoint, inputs))
+        #state = str((inputs))
+        state = tuple([waypoint] + inputs.values())
 
         return state
 
@@ -100,7 +103,7 @@ class LearningAgent(Agent):
         # Calculate the maximum Q-value of all actions for a given state
 
         #maxQ = None
-        maxQ = max(self.Q[str(state)].values())
+        maxQ = max(self.Q[state].values())
 
         return maxQ 
 
@@ -114,11 +117,9 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        if self.learning:
-            if str(state) not in self.Q.keys():
-                self.Q[str(state)] = {}
-                for x in self.valid_actions: 
-                    self.Q[str(state)][x] = 0.0 
+        if (self.learning) and (state not in self.Q.keys()):
+            self.Q[state] = {action : 0.0 for action in self.valid_actions}
+
 
         return
 
@@ -140,19 +141,32 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-        if self.learning:
-            #pass
-            try:
-                action_maxQ = [self.Q[str(state)].keys()[self.Q[str(state)].values().index(self.get_maxQ(str(state)))]]
-                p_maxQ = [1. - self.epsilon] 
-            except:
-                action_maxQ = []
-                p_maxQ = []
-            actions = self.valid_actions +  action_maxQ
+#        if self.learning:
+#            try:
+#                action_maxQ = [self.Q[state].keys()[self.Q[state].values().index(self.get_maxQ(state))]]
+#                p_maxQ = [1. - self.epsilon] 
+#            except:
+#                action_maxQ = []
+#                p_maxQ = []
+#            actions = self.valid_actions +  action_maxQ
+#            ps = 4 * [self.epsilon/4.] + p_maxQ
+#            action = np.random.choice(actions, 1, p=ps)[0]
+#        else:
+#            action = np.random.choice(self.valid_actions, 1)[0]
+
+        ###############
+        if (not self.learning) or (self.epsilon > 1.0):
+            action = np.random.choice(self.valid_actions, 1)[0]
+        else:
+            maxQ = self.get_maxQ(state)
+            actions_maxQ = [x for x in self.Q[state].keys() if self.Q[state][x] == maxQ]
+            action_maxQ = np.random.choice(actions_maxQ, 1)[0]
+
+            # actions to choose from
+            actions = self.valid_actions +  [action_maxQ]
+            p_maxQ = [1. - self.epsilon] 
             ps = 4 * [self.epsilon/4.] + p_maxQ
             action = np.random.choice(actions, 1, p=ps)[0]
-        else:
-            action = np.random.choice(self.valid_actions, 1)[0]
  
         return action
 
@@ -168,7 +182,7 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning:
-            self.Q[str(state)][action] =  (1-self.alpha) * self.Q[str(state)][action] +\
+            self.Q[state][action] =  (1-self.alpha) * self.Q[state][action] +\
                                           self.alpha * reward
         return
 
@@ -205,7 +219,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.8)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.01)
     #agent = env.create_agent(LearningAgent)
     
     ##############
@@ -230,7 +244,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10, tolerance=0.05)
+    sim.run(n_test=10, tolerance=0.01)
 
 
 if __name__ == '__main__':
