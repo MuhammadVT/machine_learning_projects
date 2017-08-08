@@ -48,20 +48,19 @@ class LearningAgent(Agent):
         else:
             if self.learning:
                 # linear decay
-                #self.epsilon = self.epsilon - 0.01
+                self.epsilon = self.epsilon - 0.001
 
                 # type 1
-                #self.epsilon = 0.85 ** self.t
-                #self.epsilon = 0.97 ** self.t
+                #self.epsilon = 0.995 ** self.t
 
                 # type 2
                 #self.epsilon = 1. / (self.t ** 2) 
 
                 # type 3
-                #self.epsilon = math.exp(-0.1 * self.t)
+                #self.epsilon = math.exp(-0.01 * self.t)
 
                 # type 4 
-                self.epsilon = math.cos(0.01* self.t)
+                #self.epsilon = math.cos(0.01* self.t)
 
                 if self.epsilon < 0:
                     self.epsilon = 0.0
@@ -86,8 +85,7 @@ class LearningAgent(Agent):
         # Set 'state' as a tuple of relevant data for the agent        
         #state = None
         #state = str((waypoint, inputs, deadline))
-        #state = str((waypoint, inputs))
-        #state = str((inputs))
+        #state = tuple(inputs.values())
         state = tuple([waypoint] + inputs.values())
 
         return state
@@ -141,32 +139,13 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-#        if self.learning:
-#            try:
-#                action_maxQ = [self.Q[state].keys()[self.Q[state].values().index(self.get_maxQ(state))]]
-#                p_maxQ = [1. - self.epsilon] 
-#            except:
-#                action_maxQ = []
-#                p_maxQ = []
-#            actions = self.valid_actions +  action_maxQ
-#            ps = 4 * [self.epsilon/4.] + p_maxQ
-#            action = np.random.choice(actions, 1, p=ps)[0]
-#        else:
-#            action = np.random.choice(self.valid_actions, 1)[0]
 
-        ###############
-        if (not self.learning) or (self.epsilon > 1.0):
+        if (not self.learning) or (self.epsilon > np.random.uniform()):
             action = np.random.choice(self.valid_actions, 1)[0]
         else:
             maxQ = self.get_maxQ(state)
             actions_maxQ = [x for x in self.Q[state].keys() if self.Q[state][x] == maxQ]
-            action_maxQ = np.random.choice(actions_maxQ, 1)[0]
-
-            # actions to choose from
-            actions = self.valid_actions +  [action_maxQ]
-            p_maxQ = [1. - self.epsilon] 
-            ps = 4 * [self.epsilon/4.] + p_maxQ
-            action = np.random.choice(actions, 1, p=ps)[0]
+            action = np.random.choice(actions_maxQ, 1)[0]
  
         return action
 
@@ -236,7 +215,7 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=0.01, log_metrics=True, display=False, optimized=True)
+    sim = Simulator(env, update_delay=0.0001, log_metrics=True, display=False, optimized=True)
     #sim = Simulator(env)
     
     ##############
