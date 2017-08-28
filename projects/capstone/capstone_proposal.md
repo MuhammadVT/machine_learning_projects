@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
 Maimaitirebike Maimaiti  
-August 20, 2017
+August 26, 2017
 
 ## Proposal
 _(approx. 2-3 pages)_
@@ -11,27 +11,16 @@ _(approx. 1-2 paragraphs)_
 
 In this section, provide brief details on the background information of the domain from which the project is proposed. Historical information relevant to the project should be included. It should be clear how or why a problem in the domain can or should be solved. Related academic research should be appropriately cited in this section, including why that research is relevant. Additionally, a discussion of your personal motivation for investigating a particular problem in the domain is encouraged but not required.
 
-bike sharing and the need for it:
-
-Concerns about global climate change, energy security, and unstable fuel prices have caused many decision makers and policy experts worldwide to closely examine the need for more sustainable trans- portation strategies.
-
-BSSs are an important part of urban mobility in many cities and are sustainable, environmentally-friendly systems. As urban density and its related problems increase, it is likely that more BSSs will exist in the future. The relatively low capital and operational cost, ease of installation, existence of pedal assistance for people who are physically unable to pedal for long distances or on difficult terrain, and better tracking of bikes are some of the properties that strengthen this prediction .
-
-Ever-growing number of motor vehicals in cites has led to increased many probelms, like pollution, noise, congestion, and greenhouse gas emissions. These problems have caused many decision makers and policy experts worldwide to closely examine the need for more sustainable transportation strategies. Bike-sharing is one of such strategeis that can greatly mitigate many of these problems.
-Bike-sharing has received increasing attention in recent years with initiatives to increase cycle usage, improve the first mile/last mile connection to other modes of transit. Especially, the  development of better methods of tracking bikes with improved technology gave birth to the rapid expansion of bike-sharing programs throughout Europe and now most other continents during this decade.  It has proven to have profound affects on creating a larger cycling population, increasing transit use, decreasing greenhouse gases, and improving public health [1](http://www.worldtransitresearch.info/research/3211/). 
-
-Bike sharing in SF and more info on bike sharing:
-
+Concerns about global climate change, energy security, and unstable fuel prices have caused many decision makers and policy experts worldwide to closely examine the need for more sustainable transportation strategies. Bike-sharing system, the shared use of a bicycle fleet, is one mobility strategy that could help address
+many of these concerns [1](http://tsrc.berkeley.edu/sites/default/files/Bikesharing%20in%20Europe,%20the%20Americas,%20and%20Asia%20-%20Shaheen.pdf). Although the 1st generation of bike-sharing programs began in Amsterdam in 1965, bike-sharing has received increasing attention in recent years with initiatives to increase cycle usage, improve the first mile/last mile connection to other modes of transit, and lessen the environmental impacts of our transport activities. Especially, the development of better methods of tracking bikes with improved technology gave birth to the rapid expansion of bike-sharing programs throughout Europe and now most other continents during this decade. Since then bike-sharing has had profound affects on creating a larger cycling population, increasing transit use, decreasing greenhouse gases, and improving public health [2](http://scholarcommons.usf.edu/jpt/vol12/iss4/3/). 
 
 In 2013, Bay Area Bike Share ([Now is named as Ford GoBike](https://www.fordgobike.com/)) was introduced as a pilot program for the Bay Area region, with 700 bikes and 70 stations across San Francisco and San Jose. Similar to car sharing, "bicycle sharing" in Bay Area is a membership-based system for short-term bicycle rental. Members can check out a bicycle from a network of automated stations, ride to the station nearest their destination, and leave the bicycle safely locked for someone else to use. While traditional bike rentals are loaned out for half-day or longer, bike sharing is designed for short, quick trips. Stations connect users to transit, businesses and other destinations, often providing the "last-mile connection." To reflect system design, pricing is set to discourage trips longer than 30 minutes. Users can take an unlimited number of 30-minute trips during their membership period; however, any individual trip over 30 minutes will incur an additional fee [3](http://www.bayareabikeshare.com/faq#BikeShare101).
 
+A crutial part of successfully operating such a BBS is the redistribution of bikes. Since the count of bikes in each station, each of which has a finite number of docks, fluctuates, redistribution operation must be performed periodically to make the bike-sharing service more efficient and environmentally friendly. However, staff moving bikes from areas of high supply/low demand to areas of low supply/high demand is time consuming, expensive, and polluting [1](http://scholarcommons.usf.edu/jpt/vol12/iss4/3/). Thererfore, predicting the number of available bikes in each station over time is one of the key tasks to making this operation more efficient. 
 
-Fordgobike is one such system. The [Bay Area Bike Share](https://www.fordgobike.com/) enables quick, easy, and affordable bike trips around the San Francisco Bay Area. 
+The modeling of bike availability using various features like time, weather, built environment, transportation infrastructure, etc., is an area of significant research interest. [Froehlich et al.](https://www.ijcai.org/Proceedings/09/Papers/238.pdf) used four predictive models to predict the number of available bikes at each station: last value, historical mean, historical trend, and a Bayesian network
 
-Need for knowing the bike count in advance 
-
-The new generation (fourth-generation) bike-sharing works towards improving distribution of bikes, installation, powering of stations, tracking, offering pedalec (pedal assistance) bikes, and new business models. Distribution of bikes must improve to make the bike-sharing service more efficient and environmentally friendly. Staff moving bikes from areas of high supply/low demand to areas of low supply/high demand is time consuming, expensive, and polluting [1](http://www.worldtransitresearch.info/research/3211/). Since the number of available bikes at a station, which has a finite number of docks, fluctuates, predicting the number of available bikes in each station over time is one of the key tasks to making this operation more efficient. 
- 
+In this project we model the bike availability use machine learning techniques to predict bike availability.
 
 ### Problem Statement
 _(approx. 1 paragraph)_
@@ -39,7 +28,8 @@ _(approx. 1 paragraph)_
 
 In this section, clearly describe the problem that is to be solved. The problem described should be well defined and should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is clear that the problem is quantifiable (the problem can be expressed in mathematical or logical terms) , measurable (the problem can be measured by some metric and clearly observed), and replicable (the problem can be reproduced and occurs more than once).
 
-In this project we model the number of available bikes at a bike share station using machine learning techniques. Specifically we will   
+The goal of this project is to predict the number of available bikes at a bike share station. Specifically, the number of available bikes at station i at time (t + $\delta$t) denoted by $Y_{i+di)}$, where 𝑖=1,2,…,70.
+the available bikes at station 𝑖 at time 𝑡, the available bikes at its neighbors at the same time 𝑡, the month-of-the-year, day-of-the-week, time-of-day, and various selected weather conditions. The predictors’ vector for station 𝑖 at time 𝑡, denoted by 𝑋𝑡𝑖, was used in the built models to predict the 𝑙𝑜𝑔 of the number of available bikes at station 𝑖 at time 𝑡 and at a prediction horizon time, denoted by log(𝑦𝑡+Δ𝑖), where 𝑖=1,2,…,70. The effect of different prediction horizons, Δ (range 15–120 minutes),
 
 
 ### Datasets and Inputs
