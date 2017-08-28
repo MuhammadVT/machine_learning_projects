@@ -1,144 +1,98 @@
+
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
 Maimaitirebike Maimaiti  
 August 26, 2017
 
 ## Proposal
-_(approx. 2-3 pages)_
-
 ### Domain Background
-_(approx. 1-2 paragraphs)_
-
-In this section, provide brief details on the background information of the domain from which the project is proposed. Historical information relevant to the project should be included. It should be clear how or why a problem in the domain can or should be solved. Related academic research should be appropriately cited in this section, including why that research is relevant. Additionally, a discussion of your personal motivation for investigating a particular problem in the domain is encouraged but not required.
-
 Concerns about global climate change, energy security, and unstable fuel prices have caused many decision makers and policy experts worldwide to closely examine the need for more sustainable transportation strategies. Bike-sharing system, the shared use of a bicycle fleet, is one mobility strategy that could help address
-many of these concerns [1](http://tsrc.berkeley.edu/sites/default/files/Bikesharing%20in%20Europe,%20the%20Americas,%20and%20Asia%20-%20Shaheen.pdf). Although the 1st generation of bike-sharing programs began in Amsterdam in 1965, bike-sharing has received increasing attention in recent years with initiatives to increase cycle usage, improve the first mile/last mile connection to other modes of transit, and lessen the environmental impacts of our transport activities. Especially, the development of better methods of tracking bikes with improved technology gave birth to the rapid expansion of bike-sharing programs throughout Europe and now most other continents during this decade. Since then bike-sharing has had profound affects on creating a larger cycling population, increasing transit use, decreasing greenhouse gases, and improving public health [2](http://scholarcommons.usf.edu/jpt/vol12/iss4/3/). 
+many of these concerns [[1]](http://tsrc.berkeley.edu/sites/default/files/Bikesharing%20in%20Europe,%20the%20Americas,%20and%20Asia%20-%20Shaheen.pdf). Although the 1st generation of bike-sharing programs began in Amsterdam in 1965, bike-sharing has received increasing attention in recent years with initiatives to increase cycle usage, improve the first mile/last mile connection to other modes of transit, and lessen the environmental impacts of our transport activities. Especially, the development of better methods of tracking bikes with improved technology gave birth to the rapid expansion of bike-sharing programs throughout Europe and now most other continents during this decade. Since then bike-sharing has had profound affects on creating a larger cycling population, increasing transit use, decreasing greenhouse gases, and improving public health [[2]](http://scholarcommons.usf.edu/jpt/vol12/iss4/3/). 
 
-In 2013, Bay Area Bike Share ([Now is named as Ford GoBike](https://www.fordgobike.com/)) was introduced as a pilot program for the Bay Area region, with 700 bikes and 70 stations across San Francisco and San Jose. Similar to car sharing, "bicycle sharing" in Bay Area is a membership-based system for short-term bicycle rental. Members can check out a bicycle from a network of automated stations, ride to the station nearest their destination, and leave the bicycle safely locked for someone else to use. While traditional bike rentals are loaned out for half-day or longer, bike sharing is designed for short, quick trips. Stations connect users to transit, businesses and other destinations, often providing the "last-mile connection." To reflect system design, pricing is set to discourage trips longer than 30 minutes. Users can take an unlimited number of 30-minute trips during their membership period; however, any individual trip over 30 minutes will incur an additional fee [3](http://www.bayareabikeshare.com/faq#BikeShare101).
+In 2013, Bay Area Bike Share ([Now is named as Ford GoBike](https://www.fordgobike.com/)) was introduced as a pilot program for the Bay Area region, with 700 bikes and 70 stations across San Francisco and San Jose. Similar to car sharing, "bicycle sharing" in Bay Area is a membership-based system for short-term bicycle rental. Members can check out a bicycle from a network of automated stations, ride to the station nearest their destination, and leave the bicycle safely locked for someone else to use. While traditional bike rentals are loaned out for half-day or longer, bike sharing is designed for short, quick trips. Stations connect users to transit, businesses and other destinations, often providing the "last-mile connection." To reflect system design, pricing is set to discourage trips longer than 30 minutes. Users can take an unlimited number of 30-minute trips during their membership period; however, any individual trip over 30 minutes will incur an additional fee [[3]](http://www.bayareabikeshare.com/faq#BikeShare101).
 
-A crutial part of successfully operating such a BBS is the redistribution of bikes. Since the count of bikes in each station, each of which has a finite number of docks, fluctuates, redistribution operation must be performed periodically to make the bike-sharing service more efficient and environmentally friendly. However, staff moving bikes from areas of high supply/low demand to areas of low supply/high demand is time consuming, expensive, and polluting [1](http://scholarcommons.usf.edu/jpt/vol12/iss4/3/). Thererfore, predicting the number of available bikes in each station over time is one of the key tasks to making this operation more efficient. 
+A crutial part of successfully operating such a BBS is the redistribution of bikes. Since the count of bikes in each station, each of which has a finite number of docks, fluctuates, redistribution operation must be performed periodically to make the bike-sharing service more efficient and environmentally friendly. However, staff moving bikes from areas of high supply/low demand to areas of low supply/high demand is time consuming, expensive, and polluting [[1]](http://scholarcommons.usf.edu/jpt/vol12/iss4/3/). Thererfore, predicting the number of available bikes in each station over time is one of the key tasks to making this operation more efficient. 
 
-The modeling of bike availability using various features like time, weather, built environment, transportation infrastructure, etc., is an area of significant research interest. [Froehlich et al.](https://www.ijcai.org/Proceedings/09/Papers/238.pdf) used four predictive models to predict the number of available bikes at each station: last value, historical mean, historical trend, and a Bayesian network
-
-In this project we model the bike availability use machine learning techniques to predict bike availability.
+The modeling of bike availability using various features like time, weather, built environment, transportation infrastructure, etc., is an area of significant research interest. [Froehlich et al. (2009)](https://www.ijcai.org/Proceedings/09/Papers/238.pdf) used four predictive models to predict the number of available bikes at each station: last value, historical mean, historical trend, and a Bayesian network. [Kaltenbrunner et al. (2010)](http://www.sciencedirect.com/science/article/pii/S1574119210000568) adopted an Autoregressive Moving Average (ARMA) model and [Yoon et al. (2012)](http://ieeexplore.ieee.org/document/6341407/) proposed a modified Autoregressive Integrated Moving Average (ARIMA) model considering spatial interaction and temporal factors. In a recent study,
+[Ashqar et al. (2017)] (http://ieeexplore.ieee.org/abstract/document/8005700/) used Random Forest (RF) and (Least-Squares Boosting) LSBoost models to predict future bike availability at a given station. In this project we explore a neural network solution for predicting future bike availability.
 
 ### Problem Statement
-_(approx. 1 paragraph)_
+The goal of this project is to predict the number of available bikes at a bike share station using various predictors. Specifically, we will treat the number of available bikes at station i in the future as the predictor, which is denoted by Yi(t+dt), where Y is the number of available bikes, i (i = 1,2,...,70.) is the station number, dt is the prediction horizen time. In this project, dt=15 minutes will be considered. That means, the prediction would be for the next 15 minutes.  The predictors that will be considered are the available bikes at station i at time t (current time), the month-of-the-year, day-of-the-week, time-of-day, and various weather conditions, like temperature, humidity, visibility, wind speed, precipitation, and events in a day (i.e., rainy, foggy, or sunny). 
 
-
-In this section, clearly describe the problem that is to be solved. The problem described should be well defined and should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is clear that the problem is quantifiable (the problem can be expressed in mathematical or logical terms) , measurable (the problem can be measured by some metric and clearly observed), and replicable (the problem can be reproduced and occurs more than once).
-
-The goal of this project is to predict the number of available bikes at a bike share station. Specifically, the number of available bikes at station i at time (t + $\delta$t) denoted by $Y_{i+di)}$, where 𝑖=1,2,…,70.
-the available bikes at station 𝑖 at time 𝑡, the available bikes at its neighbors at the same time 𝑡, the month-of-the-year, day-of-the-week, time-of-day, and various selected weather conditions. The predictors’ vector for station 𝑖 at time 𝑡, denoted by 𝑋𝑡𝑖, was used in the built models to predict the 𝑙𝑜𝑔 of the number of available bikes at station 𝑖 at time 𝑡 and at a prediction horizon time, denoted by log(𝑦𝑡+Δ𝑖), where 𝑖=1,2,…,70. The effect of different prediction horizons, Δ (range 15–120 minutes),
-
+In this problem the response variable Y, takes interger values from 0 to 27. Therefore both regression and classification models can be considered. The focus of this project will on using neural network to predict Y and will test out both the regression and classification approaches but empshasis will be on regression approach.
 
 ### Datasets and Inputs
-_(approx. 2-3 paragraphs)_
+For this problem we use the dateset provided by [Bay Area Bike Share (also known as Ford GoBike)](http://www.bayareabikeshare.com/open-data) for August 2013 to August 2015. This data is provided according to the [Ford GoBike Data License Agreement](https://assets.fordgobike.com/data-license-agreement.html). They make regular open data releases, plus maintain a real-time API.
 
-In this section, the dataset(s) and/or input(s) being considered for the project should be thoroughly described, such as how they relate to the problem and why they should be used. Information such as how the dataset or input is (was) obtained, and the characteristics of the dataset or input, should be included with relevant references and citations as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is appropriate given the context of the problem.
+#### The Dataset:
+There are four different data files (_status_, _station_, _trip_, _weather_) in this dataset, each of which will be used in different extend to solve the problem. The _status_ data provides features like current bike availability and time information. The response variable Y will aslo be taken from this data set by shifting by dt. The various features in _station_ and _trip_ data will be considered if they are useful in making prediction. Weather related features in _weather_ data will be used as predictors after removing the redunent ones. A breif description of the data is as follows:
+##### _status_ data
 
-We use datesets provided by [Bay Area Bike Share](http://www.bayareabikeshare.com/open-data), also known as Ford GoBike. This data is provided according to the [Ford GoBike Data License Agreement](https://assets.fordgobike.com/data-license-agreement.html). They make regular open data releases, plus maintain a real-time API
+_station_id_: station ID number (use "station.csv" to find corresponding station information)
+_bikes_available_: number of available bikes
+_docks_available_: number of available docks
+_time_: date and time, PST
 
-#### The Data:
-There are four different data files in this dataset.
+##### _station_ data
 
-_status_ data
+_station_id: station ID number (corresponds to "station_id" in "status.csv")
+_name_: name of station
+_lat_: latitude
+_long_: longitude
+_dockcount_: number of total docks at station
+_landmark_: city (San Francisco, Redwood City, Palo Alto, Mountain View, San Jose)
+_installation_: original date that station was installed.
 
--station_id: station ID number (use "station.csv" to find corresponding station information)
-
--bikes_available: number of available bikes
-
--docks_available: number of available docks
-
--time: date and time, PST
-
-_station_ data
-
--station_id: station ID number (corresponds to "station_id" in "status.csv")
-
--name: name of station
-
--lat: latitude
-
--long: longitude
-
--dockcount: number of total docks at station
-
--landmark: city (San Francisco, Redwood City, Palo Alto, Mountain View, San Jose)
-
--installation: original date that station was installed.
-
-_trip_ data
-
+##### _trip_ data
 Each trip is anonymized and includes:
 
--Trip ID: numeric ID of bike trip
+_Trip ID_: numeric ID of bike trip
+_Duration_: time of trip in seconds  (trips <1 min and >24 hours are excluded)
+_Start Date_: start date of trip with date and time, in PST
+_Start Station_: station name of start station
+_Start Terminal_: numeric reference for start station
+_End Date_: end date of trip with date and time, in PST
+_End Station_: station name for end station
+_End Terminal_: numeric reference for end station
+_Bike #_: ID of bike used
+_Subscription Type_: Subscriber = annual or 30-day member; Customer = 24-hour or 3-day member
+_Zip Code_: Home zip code of subscriber (customers can choose to manually enter zip at kiosk however data is unreliable)
 
--Duration: time of trip in seconds  (trips <1 min and >24 hours are excluded)
+##### _weather_ data
+Daily weather information per service area, provided from Weather Underground in PST. Weather is listed from north to south (San Francisco, Redwood City, Palo Alto, Mountain View, San Jose). The futures included in this data are:
+'date', 'max_temperature_f', 'mean_temperature_f', 'min_temperature_f', 'max_dew_point_f', 'mean_dew_point_f', 'min_dew_point_f', 'max_humidity', 'mean_humidity', 'min_humidity', 'max_sea_level_pressure_inches', 'mean_sea_level_pressure_inches', 'min_sea_level_pressure_inches',
+'max_visibility_miles', 'mean_visibility_miles', 'min_visibility_miles', 'max_wind_Speed_mph', 'mean_wind_speed_mph', 'max_gust_speed_mph', 'precipitation_inches', 'cloud_cover', 'events', 'wind_dir_degrees', 'zip_code'
 
--Start Date: start date of trip with date and time, in PST
-
--Start Station: station name of start station
-
--Start Terminal: numeric reference for start station
-
--End Date: end date of trip with date and time, in PST
-
--End Station: station name for end station
-
--End Terminal: numeric reference for end station
-
--Bike #: ID of bike used
-
--Subscription Type: Subscriber = annual or 30-day member; Customer = 24-hour or 3-day member
-
--Zip Code: Home zip code of subscriber (customers can choose to manually enter zip at kiosk however data is unreliable)
-
-_weather_ data
-
-Daily weather information per service area, provided from Weather Underground in PST. Weather is listed from north to south (San Francisco, Redwood City, Palo Alto, Mountain View, San Jose).
-        
--Precipitation_In         "numeric, in form x.xx but alpha ""T""= trace when amount less than .01 inch"        
-
--Cloud_Cover         "scale of 0-8, 0=clear"        
-
--Zip: 94107=San Francisco, 94063=Redwood City, 94301=Palo Alto, 94041=Mountain View, 95113= San Jose"
+*Note:*        
+_Precipitation_In_:         "numeric, in form x.xx but alpha ""T""= trace when amount less than .01 inch"        
+_Cloud_Cover_:         "scale of 0-8, 0=clear"        
+_Zip_: 94107=San Francisco, 94063=Redwood City, 94301=Palo Alto, 94041=Mountain View, 95113= San Jose"
 
 
 ### Solution Statement
-_(approx. 1 paragraph)_
-
-
-
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+A neural network approach will be explored to predict the future bike availability Y based on features X which includes current bike availability, datetime information, and various weather parameters, etc. Y would be treated as a continues variable, and therefore, the neural network model would be used for regression. Various number of layers and different number of neuron per layers will be explored and the best model will be selected based on mean absolute error. Then the final results will be evaluated by comparing its mean absolute error with that reported by [Ashqar et al.] (http://ieeexplore.ieee.org/abstract/document/8005700/). 
 
 ### Benchmark Model
-_(approximately 1-2 paragraphs)_
-
-In this section, provide the details for a benchmark model or result that relates to the domain, problem statement, and intended solution. Ideally, the benchmark model or result contextualizes existing methods or known information in the domain and problem given, which could then be objectively compared to the solution. Describe how the benchmark model or result is measurable (can be measured by some metric and clearly observed) with thorough detail.
-
-
-In this project, the results of RF moding of the bike count proposed in [Hudhaifa] is taken as a benchmark model. In this study, Random Forest (RF) and Least-Squares Boosting (LSBoost) algorithms were used to build univariate prediction models for available bikes at each Bay Area Bike Share station. However, to reduce the number of required prediction models for the entire BSS network, we also used Partial Least-Squares Regression (PLSR) as a multivariate regression algorithm. The performance of RF is the best and we will take it as a benchmard model.
+In a recent paper, [Ashqar et al.] (http://ieeexplore.ieee.org/abstract/document/8005700/) used Random Forest (RF) and Least-Squares Boosting (LSBoost) algorithms were used to predict the bike availability in a given station and mean squared error (MAE) is used as an evaluation metric. The average MAE results they got for RF and LSBoost are 0.37 bikes/station and 0.58 bikes/station. In this project these two values will be taken as Benchmark.
 
 ### Evaluation Metrics
-_(approx. 1-2 paragraphs)_
 
-
-The benchmark model I have taken used mean absolute error as their evaluation metrics. Therefore, I will also take it as my evalutation metrics.
-
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
+Since this is a regression problem, mean absolute error and mean squared error are good options for model evaluation. A recent study [[5]](http://ieeexplore.ieee.org/abstract/document/8005700/), whose results are taken as Benchmark in this project, uses MAE as its evaluation metric. In this project, mean squred error (MSE) will also used as an evalluation metric in addition to MAE.
 
 ### Project Design
-_(approx. 1 page)_
+The workflow for reaching the solution for the stated problem can be divided into the following steps: 
+#### Data Preprocessing
+The files in this dataset are in csv format and are well structured. However, there are missing values and incorrect entries. Therefore these issues need to be addressed first.
 
-In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
+The status.csv file size in this dataset is 1.9 GB and it contains about 72 million data points. It is difficult to work with such a large dataset using an ordinary computer. One approach to reduce the _status_ data to managable size is to downsample it. For example, downsample the original data with 1-min resolution to 15-min resolution. However, the effect of this downsampling needs to be examined to make sure that it represents the original population. 
 
------------
+Feature selection is also necessary for this problem because some features in the dataset could be redundent. For example, features like 'max_temperature_f', 'mean_temperature_f', and 'min_temperature_f' can be highly correlated such that one of them is sufficient enough for prediction. 
 
-**Before submitting your proposal, ask yourself. . .**
+For the ease of building a model, it is better to pull all the predictors and the reponse variables in the same dataframe. This requies joining the data from the four different files and put them together into a single table. Once data is joined together, categorical features need to be transformed into numerical features before feeding them into a model. One-hot encoding can be used for this purpose.  
 
-- Does the proposal you have written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Solution Statement** and **Project Design**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your proposal?
-- Have you properly proofread your proposal to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
+At this point, data will be splitted into training and test datasets. The training dataset will be used for training a model and the test data for evaluating the trained model performance.
+
+#### Model Building and Evaluation
+Neural network model will be explored as the solution to this problem. Since the problem is converted into a regression problem by treating the future bike availability as a continues variable, the last layer of the model will have only one perceptron withint any activation function. The first layer will have the same number of perceptrons as the number of encoded-features, excluding the bias. The best model will be searched by exploring different number of hidden layers with various number of perceptrons. Model selection will be based on mean absolute error. The final model will be compare with the results reported by [Ashqar et al.] (http://ieeexplore.ieee.org/abstract/document/8005700/) RF and LSBoost models have been used.
+
+
