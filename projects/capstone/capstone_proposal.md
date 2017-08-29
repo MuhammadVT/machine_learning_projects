@@ -22,7 +22,7 @@ The goal of this project is to predict the number of available bikes at a bike s
 For this problem we use the dateset provided by [Bay Area Bike Share (also known as Ford GoBike)](http://www.bayareabikeshare.com/open-data) for August 2013 to August 2015. This data is provided according to the [Ford GoBike Data License Agreement](https://assets.fordgobike.com/data-license-agreement.html). They make regular open data releases, plus maintain a real-time API.
 
 #### The Dataset:
-There are four different data files (_status_, _station_, _trip_, _weather_) in this dataset, each of which will be used in different extend to solve the problem. The _status_ data provides features like current bike availability and time information. The response variable Y will aslo be taken from this data set by shifting by dt. The various features in _station_ and _trip_ data will be considered if they are useful in making prediction. Weather related features in _weather_ data will be used as predictors after removing the redunent ones. A breif description of the data is as follows:
+There are four different data files (_status_, _station_, _trip_, _weather_) in this dataset, each of which will be used in different extend to solve the problem. The _status_ data provides features like current bike availability and time information. The response variable Y will aslo be taken from this dataset by shifting by _dt_. The various features in _station_ and _trip_ data will be considered if they are useful in making prediction. Weather related features in _weather_ data will be used as predictors after removing redunent features. A breif description of the data is as follows:
 ##### _status_ data
 
 _station_id_: station ID number (use "station.csv" to find corresponding station information)
@@ -33,26 +33,42 @@ _time_: date and time, PST
 ##### _station_ data
 
 _station_id: station ID number (corresponds to "station_id" in "status.csv")
+
 _name_: name of station
+
 _lat_: latitude
+
 _long_: longitude
+
 _dockcount_: number of total docks at station
+
 _landmark_: city (San Francisco, Redwood City, Palo Alto, Mountain View, San Jose)
+
 _installation_: original date that station was installed.
 
 ##### _trip_ data
 Each trip is anonymized and includes:
 
 _Trip ID_: numeric ID of bike trip
+
 _Duration_: time of trip in seconds  (trips <1 min and >24 hours are excluded)
+
 _Start Date_: start date of trip with date and time, in PST
+
 _Start Station_: station name of start station
+
 _Start Terminal_: numeric reference for start station
+
 _End Date_: end date of trip with date and time, in PST
+
 _End Station_: station name for end station
+
 _End Terminal_: numeric reference for end station
+
 _Bike #_: ID of bike used
+
 _Subscription Type_: Subscriber = annual or 30-day member; Customer = 24-hour or 3-day member
+
 _Zip Code_: Home zip code of subscriber (customers can choose to manually enter zip at kiosk however data is unreliable)
 
 ##### _weather_ data
@@ -61,8 +77,11 @@ Daily weather information per service area, provided from Weather Underground in
 'max_visibility_miles', 'mean_visibility_miles', 'min_visibility_miles', 'max_wind_Speed_mph', 'mean_wind_speed_mph', 'max_gust_speed_mph', 'precipitation_inches', 'cloud_cover', 'events', 'wind_dir_degrees', 'zip_code'
 
 *Note:*        
+
 _Precipitation_In_:         "numeric, in form x.xx but alpha ""T""= trace when amount less than .01 inch"        
+
 _Cloud_Cover_:         "scale of 0-8, 0=clear"        
+
 _Zip_: 94107=San Francisco, 94063=Redwood City, 94301=Palo Alto, 94041=Mountain View, 95113= San Jose"
 
 
