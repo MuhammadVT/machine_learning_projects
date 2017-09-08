@@ -122,11 +122,8 @@ def integrate_data(df_status, df_weather,new_id):
     # drop time column
     df.drop(["time"], axis=1, inplace=True)
 
-#    # drop rows where NaN is present 
-#    df.drop(df.index[-1], inplace=True)
-
     # drop NaNs
-    df.dropna(axis=0, how="any")
+    df.dropna(axis=0, how="any", inplace=True)
 
     # change column orders
     cols = list(df)
